@@ -6,7 +6,6 @@ import pygame, sys, random, math, time
     #if (current - start) == 1:
         #print("1 seconds")
         #start = time.time()
-
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -14,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (500, 400))
 
     def move(self, deltax, deltay):
-        if self.rect.top > 0 and self.rect.bottom < 800 and self.rect.left > 100 and self.rect.right < 1000:
+        if self.rect.top > 0 and self.rect.bottom < 800 and self.rect.left > 100 and self.rect.right < 900:
             self.rect.centery += deltay
             self.rect.centerx += deltax
         else:
@@ -26,6 +25,19 @@ class Player(pygame.sprite.Sprite):
                 self.rect.centerx += deltax
             if deltax >= 0 and self.rect.left <= 100:
                 self.rect.centerx += deltax
+            else:
+                if deltay >= 0 and self.rect.bottom >= 800 and self.rect.left >= 100 and self.rect.right <= 900:
+                    self.rect.centery += 0
+                    self.rect.centerx += deltax
+                if deltay <= 0 and self.rect.top <= 100 and self.rect.left >= 100 and self.rect.right <= 900:
+                    self.rect.centery += 0
+                    self.rect.centerx += deltax
+                if deltax >= 0 and self.rect.right >= 900 and self.rect.top >= 100 and self.rect.bottom <= 800:
+                    self.rect.centerx += 0
+                    self.rect.centery += deltay
+                if deltax <= 0 and self.rect.left <= 100 and self.rect.top >= 100 and self.rect.bottom <= 800:
+                    self.rect.centerx += 0
+                    self.rect.centery += deltay
 
 class Line(pygame.sprite.Sprite):
     def __init__(self, x):
