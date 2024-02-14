@@ -19,24 +19,19 @@ class Player(pygame.sprite.Sprite):
         else:
             if deltay <= 0 and self.rect.bottom >= 800:
                 self.rect.centery += deltay
+                if self.rect.left >= 100 and self.rect.right <= 900:
+                    self.rect.centerx += deltax
             if deltay >= 0 and self.rect.top <= 0:
                 self.rect.centery += deltay
+                if self.rect.left >= 100 and self.rect.right <= 900:
+                    self.rect.centerx += deltax
             if deltax <= 0 and self.rect.right >= 900:
                 self.rect.centerx += deltax
+                if self.rect.top >= 0 and self.rect.bottom <= 800:
+                    self.rect.centery += deltay
             if deltax >= 0 and self.rect.left <= 100:
                 self.rect.centerx += deltax
-            else:
-                if deltay >= 0 and self.rect.bottom >= 800 and self.rect.left >= 100 and self.rect.right <= 900:
-                    self.rect.centery += 0
-                    self.rect.centerx += deltax
-                if deltay <= 0 and self.rect.top <= 0 and self.rect.left >= 100 and self.rect.right <= 900:
-                    self.rect.centery += 0
-                    self.rect.centerx += deltax
-                if deltax >= 0 and self.rect.right >= 900 and self.rect.top >= 0 and self.rect.bottom <= 800:
-                    self.rect.centerx += 0
-                    self.rect.centery += deltay
-                if deltax <= 0 and self.rect.left <= 100 and self.rect.top >= 0 and self.rect.bottom <= 800:
-                    self.rect.centerx += 0
+                if self.rect.top >= 0 and self.rect.bottom <= 800:
                     self.rect.centery += deltay
 
 class Line(pygame.sprite.Sprite):
