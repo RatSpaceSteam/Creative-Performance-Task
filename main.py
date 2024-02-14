@@ -47,6 +47,14 @@ class Middle(pygame.sprite.Sprite):
         self.image = pygame.Surface((15,50), pygame.SRCALPHA, 32)
         self.image.fill((255,255,255))
         self.rect = self.image.get_rect(center = (500, y))
+    
+    def conveyor(self, deltax, deltay):
+        if self.rect.top >= 800:
+            self.rect = self.image.get_rect(center = (500, 25))
+            self.rect.centery += deltay
+        else:
+            self.rect.centery += deltay
+        
 
 pygame.init()
 screen_width = 1000
@@ -64,9 +72,11 @@ line_two = Line(900)
 road_obj = pygame.sprite.Group()
 road_obj.add(line_one)
 road_obj.add(line_two)
+mid = pygame.sprite.Group()
 for num in range(8):
-    road_obj.add(Middle(assignment))
+    mid.add(Middle(assignment))
     assignment += 100
+road_obj.add(mid)
 road_obj.add(you)
 
 running = True
@@ -78,15 +88,19 @@ while running:
 
     screen.fill(BLACK)
 
+    for middle in mid:
+        if type(middle) == Middle:
+            middle.conveyor(0, 15)
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        you.move(0,-5)
+        you.move(0,-7)
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        you.move(0,5)
+        you.move(0,7)
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        you.move(-5,0)
+        you.move(-7,0)
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        you.move(5,0)
+        you.move(7,0)
 
     road_obj.draw(screen)
 
