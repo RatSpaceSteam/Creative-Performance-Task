@@ -13,13 +13,13 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (500, 400))
 
     def move(self, deltax, deltay):
-        if self.rect.top > 0 and self.rect.bottom < 800 and self.rect.left > 100 and self.rect.right < 900:
+        if self.rect.top >= 0 and self.rect.bottom <= 800 and self.rect.left >= 100 and self.rect.right <= 900:
             self.rect.centery += deltay
             self.rect.centerx += deltax
         else:
             if deltay <= 0 and self.rect.bottom >= 800:
                 self.rect.centery += deltay
-            if deltay >= 0 and self.rect.top <= 100:
+            if deltay >= 0 and self.rect.top <= 0:
                 self.rect.centery += deltay
             if deltax <= 0 and self.rect.right >= 900:
                 self.rect.centerx += deltax
@@ -29,13 +29,13 @@ class Player(pygame.sprite.Sprite):
                 if deltay >= 0 and self.rect.bottom >= 800 and self.rect.left >= 100 and self.rect.right <= 900:
                     self.rect.centery += 0
                     self.rect.centerx += deltax
-                if deltay <= 0 and self.rect.top <= 100 and self.rect.left >= 100 and self.rect.right <= 900:
+                if deltay <= 0 and self.rect.top <= 0 and self.rect.left >= 100 and self.rect.right <= 900:
                     self.rect.centery += 0
                     self.rect.centerx += deltax
-                if deltax >= 0 and self.rect.right >= 900 and self.rect.top >= 100 and self.rect.bottom <= 800:
+                if deltax >= 0 and self.rect.right >= 900 and self.rect.top >= 0 and self.rect.bottom <= 800:
                     self.rect.centerx += 0
                     self.rect.centery += deltay
-                if deltax <= 0 and self.rect.left <= 100 and self.rect.top >= 100 and self.rect.bottom <= 800:
+                if deltax <= 0 and self.rect.left <= 100 and self.rect.top >= 0 and self.rect.bottom <= 800:
                     self.rect.centerx += 0
                     self.rect.centery += deltay
 
@@ -80,6 +80,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
     screen.fill(BLACK)
 
     keys = pygame.key.get_pressed()
