@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 180
+timer = 20
 #while True:
     #current = time.time()
     #if (current - start) == 1:
@@ -69,6 +69,37 @@ you = Player()
 line_one = Line(100)
 line_two = Line(900)
 
+font1 = pygame.font.Font('freesansbold.ttf', 17)
+l1 = font1.render("Aliens have invaded Earth.", True, WHITE, BLACK)
+l1Rect = l1.get_rect()
+l1Rect.center = (500, 100)
+
+font2 = pygame.font.Font('freesansbold.ttf', 17)
+l2 = font2.render("All systems of nuclear missile defense have been disabled.", True, WHITE, BLACK)
+l2Rect = l2.get_rect()
+l2Rect.center = (500, 200)
+
+font3 = pygame.font.Font('freesansbold.ttf', 17)
+l3 = font3.render("Only trucks can deliver payloads towards their intended targets now.", True, WHITE, BLACK)
+l3Rect = l3.get_rect()
+l3Rect.center = (500, 300)
+
+font4 = pygame.font.Font('freesansbold.ttf', 17)
+l4 = font4.render("Your mission is to deliver a warhead to the largest ship in the invading fleet, which has recently made landfall.", True, WHITE, BLACK)
+l4Rect = l4.get_rect()
+l4Rect.center = (500, 400)
+
+font5 = pygame.font.Font('freesansbold.ttf', 17)
+l5 = font5.render("Are you brave enough to save humanity?", True, WHITE, BLACK)
+l5Rect = l5.get_rect()
+l5Rect.center = (500, 500)
+
+font6 = pygame.font.Font('freesansbold.ttf', 17)
+certainty = ""
+input_active = True
+
+begin = 0
+
 road_obj = pygame.sprite.Group()
 road_obj.add(line_one)
 road_obj.add(line_two)
@@ -85,35 +116,60 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            input_active = True
+            certainty = ""
+        elif event.type == pygame.KEYDOWN and input_active:
+            if event.key == pygame.K_RETURN:
+                input_active = False
+            elif event.key == pygame.K_BACKSPACE:
+                certainty = certainty[:-1]
+            else:
+                certainty += event.unicode
 
     screen.fill(BLACK)
+    if begin == 0:
+        screen.blit(l1, l1Rect)
+        screen.blit(l2, l2Rect)
+        screen.blit(l3, l3Rect)
+        screen.blit(l4, l4Rect)
+        screen.blit(l5, l5Rect)
+        choice = font6.render(certainty, True, WHITE, BLACK)
+        choiceRect = choice.get_rect()
+        choiceRect.center = (500, 600)
+        screen.blit(choice, choiceRect)
+        if certainty == "Yes":
+            begin += 1
+        if certainty == "No":
+            break
+        
+    else:
+        for middle in mid:
+            if type(middle) == Middle:
+                middle.conveyor(0, 10)
 
-    for middle in mid:
-        if type(middle) == Middle:
-            middle.conveyor(0, 10)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            you.move(0,-10)
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            you.move(0,10)
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            you.move(-10,0)
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            you.move(10,0)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        you.move(0,-10)
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        you.move(0,10)
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        you.move(-10,0)
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        you.move(10,0)
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        wangmiao = font.render(str(timer), True, WHITE, BLACK)
+        wangmiaoRect = wangmiao.get_rect()
+        wangmiaoRect.center = (500, 50)
 
-    font = pygame.font.Font('freesansbold.ttf', 32)
-    clock = font.render(str(timer), True, WHITE, BLACK)
-    clockRect = clock.get_rect()
-    clockRect.center = (500, 50)
-    current = time.time()
+        road_obj.draw(screen)
+        screen.blit(wangmiao, wangmiaoRect)
 
-    road_obj.draw(screen)
-    screen.blit(clock, clockRect)
-
-    if (current - start) <= 1:
-        timer -= 1
-        start = time.time()
+        current = time.time()
+        if (current - start) >= 1:
+            timer -= 1
+            start = time.time()
 
     pygame.display.flip()
     clock.tick(60)
