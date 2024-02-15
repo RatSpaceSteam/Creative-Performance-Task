@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 20
+timer = 180
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
