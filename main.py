@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
-#start = time.time()
-#print("Start time", start)
+start = time.time()
+timer = 180
 #while True:
     #current = time.time()
     #if (current - start) == 1:
@@ -60,7 +60,7 @@ pygame.init()
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Nuclear Hero")
+pygame.display.set_caption("3 Minutes to Midnight")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -90,19 +90,30 @@ while running:
 
     for middle in mid:
         if type(middle) == Middle:
-            middle.conveyor(0, 15)
+            middle.conveyor(0, 10)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP] or keys[pygame.K_w]:
-        you.move(0,-7)
+        you.move(0,-10)
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        you.move(0,7)
+        you.move(0,10)
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        you.move(-7,0)
+        you.move(-10,0)
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        you.move(7,0)
+        you.move(10,0)
+
+    font = pygame.font.Font('freesansbold.ttf', 32)
+    clock = font.render(str(timer), True, WHITE, BLACK)
+    clockRect = clock.get_rect()
+    clockRect.center = (500, 50)
+    current = time.time()
 
     road_obj.draw(screen)
+    screen.blit(clock, clockRect)
+
+    if (current - start) <= 1:
+        timer -= 1
+        start = time.time()
 
     pygame.display.flip()
     clock.tick(60)
