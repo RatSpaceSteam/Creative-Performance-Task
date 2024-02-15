@@ -1,11 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
 timer = 20
-#while True:
-    #current = time.time()
-    #if (current - start) == 1:
-        #print("1 seconds")
-        #start = time.time()
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -138,9 +133,9 @@ while running:
         choiceRect = choice.get_rect()
         choiceRect.center = (500, 600)
         screen.blit(choice, choiceRect)
-        if certainty == "Yes":
+        if (certainty == "Yes" or certainty == "yes") and input_active == False:
             begin += 1
-        if certainty == "No":
+        if (certainty == "No" or certainty == "no") and input_active == False:
             break
         
     else:
