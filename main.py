@@ -111,6 +111,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        ##credit to Rabbid76 on stackoverflow for how to make pygame inputs while the code is running##
         elif event.type == pygame.MOUSEBUTTONDOWN:
             input_active = True
             certainty = ""
@@ -138,7 +139,7 @@ while running:
         if (certainty == "No" or certainty == "no") and input_active == False:
             break
         
-    else:
+    if begin == 1:
         for middle in mid:
             if type(middle) == Middle:
                 middle.conveyor(0, 10)
