@@ -167,6 +167,12 @@ while running:
             timer -= 1
             start = time.time()
 
+    if timer == 0:
+        begin += 1
+    
+    if begin == 2:
+        break
+
     pygame.display.flip()
     clock.tick(60)
 pygame.quit()
