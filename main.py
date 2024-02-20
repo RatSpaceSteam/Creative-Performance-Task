@@ -58,6 +58,8 @@ class Obstacle(pygame.sprite.Sprite):
         if choice % 2 == 0:
                 self.image = pygame.image.load("obstacles/boulder.png")
         self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
+        while self.rect.centerx > 400 and self.rect.centerx < 600:
+            self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
 
     def conveyor(self, deltax, deltay):
         if self.rect.top >= 800:
