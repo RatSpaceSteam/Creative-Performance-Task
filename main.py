@@ -68,6 +68,8 @@ class Obstacle(pygame.sprite.Sprite):
         else:
             self.rect.centery += deltay
 
+    def insurance(self, obj):
+        return math.dist(self.rect.center, obj.rect.center) < self.radius + obj.radius
 
 pygame.init()
 screen_width = 1000
