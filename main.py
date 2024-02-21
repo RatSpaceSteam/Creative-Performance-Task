@@ -142,7 +142,7 @@ mid = pygame.sprite.Group()
 for num in range(8):
     mid.add(Middle(assignment))
     assignment += 100
-for num in range(6):
+for num in range(5):
     road_rage.add(Obstacle(choice))
     choice += 1
 road_obj.add(mid)
