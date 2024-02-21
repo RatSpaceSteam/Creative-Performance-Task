@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 180
+timer = 61
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -75,7 +75,7 @@ pygame.init()
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("3 Minutes to Sunrise")
+pygame.display.set_caption("One Minute to Sunrise")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -88,7 +88,7 @@ line_two = Line(900)
 font1 = pygame.font.Font('freesansbold.ttf', 17)
 font2 = pygame.font.Font('freesansbold.ttf', 32)
 
-l0 = font2.render("Three Minutes to Sunrise", True, WHITE, BLACK)
+l0 = font2.render("One Minute to Sunrise", True, WHITE, BLACK)
 l0Rect = l0.get_rect()
 l0Rect.center = (500, 100)
 
