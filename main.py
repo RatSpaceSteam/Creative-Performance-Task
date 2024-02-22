@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 11
+timer = 61
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -155,6 +155,10 @@ win3Rect.center = (500, 500)
 begin = 0
 pts = 0
 
+points = font3.render("POINTS:", True, WHITE, BLACK)
+pointsRect = points.get_rect()
+pointsRect.center = (500, 600)
+
 road_obj = pygame.sprite.Group()
 road_rage = pygame.sprite.Group()
 road_kill = pygame.sprite.Group()
@@ -167,8 +171,8 @@ for num in range(8):
 for num in range(5):
     road_rage.add(Obstacle(choice))
     choice += 1
-#for num in range(3):
-    #road_kill.add(Squishy(BLUE))
+for num in range(3):
+    road_kill.add(Squishy(BLUE))
 road_obj.add(mid)
 road_obj.add(you)
 alive = True
@@ -216,9 +220,9 @@ while running:
         for bump in road_rage:
             if type(bump) == Obstacle:
                 bump.conveyor(0, 10)
-        #for xeno in road_kill:
-            #if type(xeno) == Squishy:
-                #xeno.conveyor(0, 10)
+        for xeno in road_kill:
+            if type(xeno) == Squishy:
+                xeno.conveyor(0, 10)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
@@ -237,7 +241,7 @@ while running:
 
         road_obj.draw(screen)
         road_rage.draw(screen)
-        #road_kill.draw(screen)
+        road_kill.draw(screen)
         screen.blit(wangmiao, wangmiaoRect)
 
         current = time.time()
@@ -250,20 +254,30 @@ while running:
         you.kill()
         alive = False
     
-    #for xeno in road_kill:
-        #if xeno.rect.colliderect(you.rect):
-            #xeno.relocate()
+    for xeno in road_kill:
+        if xeno.rect.colliderect(you.rect):
+            xeno.respawn()
+            pts += 10
 
     if not alive and you not in road_obj:
         screen.blit(lose, loseRect)
+        screen.blit(points, pointsRect)
+        pointsnum = font3.render(str(pts), True, WHITE, BLACK)
+        pointsnumRect = pointsnum.get_rect()
+        pointsnumRect.center = (500, 650)
+        screen.blit(pointsnum, pointsnumRect)
 
     if timer <= 0:
         alive = False
         begin += 1
-        screen.fill(BLACK)
         screen.blit(win, winRect)
         screen.blit(win2, win2Rect)
         screen.blit(win3, win3Rect)
+        screen.blit(points, pointsRect)
+        pointsnum = font3.render(str(pts), True, WHITE, BLACK)
+        pointsnumRect = pointsnum.get_rect()
+        pointsnumRect.center = (500, 650)
+        screen.blit(pointsnum, pointsnumRect)
 
 
     pygame.display.flip()
