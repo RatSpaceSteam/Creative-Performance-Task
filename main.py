@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 61
+timer = 11
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -68,6 +68,27 @@ class Obstacle(pygame.sprite.Sprite):
         else:
             self.rect.centery += deltay
 
+class Squishy(pygame.sprite.Sprite):
+    def __init__(self, color):
+        super(Squishy, self).__init__()
+        self.radius = 10
+        self.color = color
+        self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
+        self.image = self.image.convert_alpha()
+        pygame.draw.circle(self.image, color, (self.radius, self.radius), self.radius)
+        self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
+    
+    def conveyor(self, deltax, deltay):
+        if self.rect.top >= 800:
+            self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
+            self.rect.centery += deltay
+        else:
+            self.rect.centery += deltay
+    
+    def respawn(self):
+        self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
+
+
 pygame.init()
 screen_width = 1000
 screen_height = 800
@@ -75,6 +96,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("One Minute to Sunrise")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
 
 assignment = 50
 choice = 0
@@ -119,15 +141,15 @@ loseRect = lose.get_rect()
 loseRect.center = (500, 400)
 
 font3 = pygame.font.Font('freesansbold.ttf', 17)
-win = font3.render("You win!", True, WHITE, BLACK)
+win = font3.render("CONGRATULATIONS", True, WHITE, BLACK)
 winRect = win.get_rect()
 winRect.center = (500, 300)
 
-win2 = font3.render("THE ALIENS HAVE BEEN DEFEATED!", True, WHITE, BLACK)
+win2 = font3.render("THE ALIEN MENACE HAS BEEN STUNG WHERE IT COUNTS", True, WHITE, BLACK)
 win2Rect = win2.get_rect()
 win2Rect.center = (500, 400)
 
-win3 = font3.render("HUMANITY IS SAVED!", True, WHITE, BLACK)
+win3 = font3.render("HUMANITY NOW HAS A FIGHTING CHANCE AT SURVIVAL", True, WHITE, BLACK)
 win3Rect = win3.get_rect()
 win3Rect.center = (500, 500)
 begin = 0
@@ -135,6 +157,7 @@ pts = 0
 
 road_obj = pygame.sprite.Group()
 road_rage = pygame.sprite.Group()
+road_kill = pygame.sprite.Group()
 road_obj.add(line_one)
 road_obj.add(line_two)
 mid = pygame.sprite.Group()
@@ -144,6 +167,8 @@ for num in range(8):
 for num in range(5):
     road_rage.add(Obstacle(choice))
     choice += 1
+#for num in range(3):
+    #road_kill.add(Squishy(BLUE))
 road_obj.add(mid)
 road_obj.add(you)
 alive = True
@@ -191,6 +216,9 @@ while running:
         for bump in road_rage:
             if type(bump) == Obstacle:
                 bump.conveyor(0, 10)
+        #for xeno in road_kill:
+            #if type(xeno) == Squishy:
+                #xeno.conveyor(0, 10)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
@@ -209,6 +237,7 @@ while running:
 
         road_obj.draw(screen)
         road_rage.draw(screen)
+        #road_kill.draw(screen)
         screen.blit(wangmiao, wangmiaoRect)
 
         current = time.time()
@@ -219,14 +248,19 @@ while running:
     get_hit = pygame.sprite.spritecollide(you, road_rage, False)
     if get_hit:
         you.kill()
-
-    if you not in road_obj:
         alive = False
+    
+    #for xeno in road_kill:
+        #if xeno.rect.colliderect(you.rect):
+            #xeno.relocate()
 
-    if not alive:
+    if not alive and you not in road_obj:
         screen.blit(lose, loseRect)
 
     if timer <= 0:
+        alive = False
+        begin += 1
+        screen.fill(BLACK)
         screen.blit(win, winRect)
         screen.blit(win2, win2Rect)
         screen.blit(win3, win3Rect)
