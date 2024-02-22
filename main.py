@@ -63,13 +63,10 @@ class Obstacle(pygame.sprite.Sprite):
 
     def conveyor(self, deltax, deltay):
         if self.rect.top >= 800:
-            self.rect = self.image.get_rect(center = (random.randint(100, 900), 25))
+            self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
             self.rect.centery += deltay
         else:
             self.rect.centery += deltay
-
-    def insurance(self, obj):
-        return math.dist(self.rect.center, obj.rect.center) < self.radius + obj.radius
 
 pygame.init()
 screen_width = 1000
@@ -219,9 +216,6 @@ while running:
             timer -= 1
             start = time.time()
 
-    if timer == 0:
-        begin += 2
-
     get_hit = pygame.sprite.spritecollide(you, road_rage, False)
     if get_hit:
         you.kill()
@@ -231,13 +225,11 @@ while running:
 
     if not alive:
         screen.blit(lose, loseRect)
-        timer = 180
 
-    if begin == 3:
+    if timer <= 0:
         screen.blit(win, winRect)
         screen.blit(win2, win2Rect)
         screen.blit(win3, win3Rect)
-        timer = 180
 
 
     pygame.display.flip()
