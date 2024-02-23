@@ -106,6 +106,7 @@ line_two = Line(900)
 
 font1 = pygame.font.Font('freesansbold.ttf', 17)
 font2 = pygame.font.Font('freesansbold.ttf', 32)
+font3 = pygame.font.Font('freesansbold.ttf', 50)
 
 l0 = font2.render("One Minute to Sunrise", True, WHITE, BLACK)
 l0Rect = l0.get_rect()
@@ -135,29 +136,8 @@ font6 = pygame.font.Font('freesansbold.ttf', 17)
 certainty = ""
 input_active = True
 
-font2 = pygame.font.Font('freesansbold.ttf', 50)
-lose = font2.render("GAME OVER", True, WHITE, BLACK)
-loseRect = lose.get_rect()
-loseRect.center = (500, 400)
-
-font3 = pygame.font.Font('freesansbold.ttf', 17)
-win = font3.render("CONGRATULATIONS", True, WHITE, BLACK)
-winRect = win.get_rect()
-winRect.center = (500, 300)
-
-win2 = font3.render("THE ALIEN MENACE HAS BEEN STUNG WHERE IT COUNTS", True, WHITE, BLACK)
-win2Rect = win2.get_rect()
-win2Rect.center = (500, 400)
-
-win3 = font3.render("HUMANITY NOW HAS A FIGHTING CHANCE AT SURVIVAL", True, WHITE, BLACK)
-win3Rect = win3.get_rect()
-win3Rect.center = (500, 500)
 begin = 0
 pts = 0
-
-points = font3.render("POINTS:", True, WHITE, BLACK)
-pointsRect = points.get_rect()
-pointsRect.center = (500, 600)
 
 road_obj = pygame.sprite.Group()
 road_rage = pygame.sprite.Group()
@@ -165,6 +145,7 @@ road_kill = pygame.sprite.Group()
 road_obj.add(line_one)
 road_obj.add(line_two)
 mid = pygame.sprite.Group()
+
 for num in range(8):
     mid.add(Middle(assignment))
     assignment += 100
@@ -175,28 +156,57 @@ for num in range(3):
     road_kill.add(Squishy(BLUE))
 road_obj.add(mid)
 road_obj.add(you)
-alive = True
 
-def w_l(score, list, protag):
-    check = pygame.sprite.Group
-    for i in range(len(list)):
-        check.append(list[i])
-    if protag not in check:
-        screen.blit(lose, loseRect)
-        screen.blit(points, pointsRect)
-        pointsnum = font3.render(str(score), True, WHITE, BLACK)
-        pointsnumRect = pointsnum.get_rect()
-        pointsnumRect.center = (500, 650)
-        screen.blit(pointsnum, pointsnumRect)
-    else:
-        screen.blit(win, winRect)
-        screen.blit(win2, win2Rect)
-        screen.blit(win3, win3Rect)
-        screen.blit(points, pointsRect)
-        pointsnum = font3.render(str(pts), True, WHITE, BLACK)
-        pointsnumRect = pointsnum.get_rect()
-        pointsnumRect.center = (500, 650)
-        screen.blit(pointsnum, pointsnumRect)
+alive = True
+list_w = ["CONGRATULATIONS", "THE ALIEN MENACE HAS BEEN STUNG WHERE IT COUNTS", "HUMANITY NOW HAS A FIGHTING CHANCE AT SURVIVAL", "POINTS:"]
+list_l = ["GAME OVER", "POINTS:"]
+
+def w_l(score, check, checknum, list1, list2):
+    if not check:
+        if checknum <= 0:
+            pos_y = 200
+            i = 0
+            for text in list1:
+                if i < 3:
+                    pos_y += 100
+                    win = font2.render(text, True, WHITE, BLACK)
+                    winRect = win.get_rect()
+                    winRect.center = (500, pos_y)
+                    screen.blit(win, winRect)
+                    i += 1
+                else:
+                    pos_y += 100
+                    win = font1.render(text, True, WHITE, BLACK)
+                    winRect = win.get_rect()
+                    winRect.center = (500, pos_y)
+                    screen.blit(win, winRect)
+            pointsnum = font1.render(str(score), True, WHITE, BLACK)
+            pointsnumRect = pointsnum.get_rect()
+            pointsnumRect.center = (500, 650)
+            screen.blit(pointsnum, pointsnumRect)
+        if checknum > 0:
+            pos_y = 200
+            i = 0
+            for text in list2:
+                if i < 1:
+                    pos_y += 200
+                    lose = font3.render(text, True, WHITE, BLACK)
+                    loseRect = lose.get_rect()
+                    loseRect.center = (500, pos_y)
+                    screen.blit(lose, loseRect)
+                    i += 1
+                else:
+                    pos_y += 200
+                    lose = font1.render(text, True, WHITE, BLACK)
+                    loseRect = lose.get_rect()
+                    loseRect.center = (500, pos_y)
+                    screen.blit(lose, loseRect)
+            pointsnum = font1.render(str(score), True, WHITE, BLACK)
+            pointsnumRect = pointsnum.get_rect()
+            pointsnumRect.center = (500, 650)
+            screen.blit(pointsnum, pointsnumRect)
+
+        
 
 
 
@@ -271,7 +281,7 @@ while running:
         if (current - start) >= 1:
             timer -= 1
             start = time.time()
-
+   
     for xeno in road_kill:
         if xeno.rect.colliderect(you.rect):
             xeno.respawn()
@@ -280,26 +290,16 @@ while running:
     get_hit = pygame.sprite.spritecollide(you, road_rage, False)
     if get_hit:
         you.kill()
+        begin += 1
 
     if you not in road_obj:
         alive = False
-        screen.blit(lose, loseRect)
-        screen.blit(points, pointsRect)
-        pointsnum = font3.render(str(pts), True, WHITE, BLACK)
-        pointsnumRect = pointsnum.get_rect()
-        pointsnumRect.center = (500, 650)
-        screen.blit(pointsnum, pointsnumRect)
+        w_l(pts, alive, timer, list_w, list_l)
+        timer = 61
 
     if timer <= 0:
         alive = False
-        screen.blit(win, winRect)
-        screen.blit(win2, win2Rect)
-        screen.blit(win3, win3Rect)
-        screen.blit(points, pointsRect)
-        pointsnum = font3.render(str(pts), True, WHITE, BLACK)
-        pointsnumRect = pointsnum.get_rect()
-        pointsnumRect.center = (500, 650)
-        screen.blit(pointsnum, pointsnumRect)
+        w_l(pts, alive, timer, list_w, list_l)
 
 
     pygame.display.flip()
