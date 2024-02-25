@@ -88,6 +88,39 @@ class Squishy(pygame.sprite.Sprite):
     def respawn(self):
         self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, color):
+        super(Bullet, self).__init__()
+        self.radius = 10
+        self.speed = 10
+        self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
+        self.image = self.image.convert_alpha()
+        pygame.draw.circle(self.image, color, (self.radius, self.radius), self.radius)
+        self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
+        while self.rect.centerx > 400 and self.rect.centerx < 600:
+            self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
+    
+    def hammerlock(self, target):
+        px = target.rect.centerx
+        py = target.rect.centery
+        distx = px - self.rect.centerx
+        disty = self.rect.centery - py
+        disty *= -1
+        self.deltax = distx
+        self.deltay = disty
+        self.rect.centerx += self.deltax
+        self.rect.centerx += self.deltay
+    
+    def respawn(self):
+        self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
+    
+    def conveyor(self, deltax, deltay):
+        if self.rect.top >= 800:
+            self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
+            self.rect.centery += deltay
+        else:
+            self.rect.centery += deltay
+
 
 pygame.init()
 screen_width = 1000
@@ -108,31 +141,10 @@ font1 = pygame.font.Font('freesansbold.ttf', 17)
 font2 = pygame.font.Font('freesansbold.ttf', 32)
 font3 = pygame.font.Font('freesansbold.ttf', 50)
 
-l0 = font2.render("One Minute to Sunrise", True, WHITE, BLACK)
-l0Rect = l0.get_rect()
-l0Rect.center = (500, 100)
+title = font2.render("One Minute to Sunrise", True, WHITE, BLACK)
+titleRect = title.get_rect()
+titleRect.center = (500, 100)
 
-l1 = font1.render("Aliens have invaded Earth.", True, WHITE, BLACK)
-l1Rect = l1.get_rect()
-l1Rect.center = (500, 200)
-
-l2 = font1.render("All systems of nuclear missile defense have been disabled.", True, WHITE, BLACK)
-l2Rect = l2.get_rect()
-l2Rect.center = (500, 300)
-
-l3 = font1.render("Only trucks can deliver payloads towards their intended targets now.", True, WHITE, BLACK)
-l3Rect = l3.get_rect()
-l3Rect.center = (500, 400)
-
-l4 = font1.render("Your mission is to deliver a warhead to the largest ship in the invading fleet, which has recently made landfall.", True, WHITE, BLACK)
-l4Rect = l4.get_rect()
-l4Rect.center = (500, 500)
-
-l5 = font1.render("Are you brave enough to save humanity?", True, WHITE, BLACK)
-l5Rect = l5.get_rect()
-l5Rect.center = (500, 600)
-
-font6 = pygame.font.Font('freesansbold.ttf', 17)
 certainty = ""
 input_active = True
 
@@ -154,19 +166,29 @@ for num in range(5):
     choice += 1
 for num in range(3):
     road_kill.add(Squishy(BLUE))
+road_kill.add(Bullet(WHITE))
 road_obj.add(mid)
 road_obj.add(you)
 
 alive = True
+list_start = ["Aliens have invaded Earth.", "All systems of nuclear missile defense have been disabled.", "Only trucks can deliver payloads towards their intended targets now.", "Your mission is to deliver a warhead to the largest ship in the invading fleet, which has recently made landfall.", "Are you brave enough to save humanity?"]
 list_w = ["CONGRATULATIONS", "THE ALIEN MENACE HAS BEEN STUNG WHERE IT COUNTS", "HUMANITY NOW HAS A FIGHTING CHANCE AT SURVIVAL", "POINTS:"]
 list_l = ["GAME OVER", "POINTS:"]
 
-def w_l(score, check, checknum, list1, list2):
-    if not check:
+def w_l_start(score, check, checknum, list1, list2, list3):
+    if check:
+        pos_y = 100
+        for text in list1:
+            pos_y += 100
+            lore = font1.render(text, True, WHITE, BLACK)
+            loreRect = lore.get_rect()
+            loreRect.center = (500, pos_y)
+            screen.blit(lore, loreRect)
+    else:
         if checknum <= 0:
             pos_y = 200
             i = 0
-            for text in list1:
+            for text in list2:
                 if i < 3:
                     pos_y += 100
                     win = font2.render(text, True, WHITE, BLACK)
@@ -187,7 +209,7 @@ def w_l(score, check, checknum, list1, list2):
         if checknum > 0:
             pos_y = 200
             i = 0
-            for text in list2:
+            for text in list3:
                 if i < 1:
                     pos_y += 200
                     lose = font3.render(text, True, WHITE, BLACK)
@@ -227,13 +249,9 @@ while running:
     screen.fill(BLACK)
 
     if begin == 0:
-        screen.blit(l0, l0Rect)
-        screen.blit(l1, l1Rect)
-        screen.blit(l2, l2Rect)
-        screen.blit(l3, l3Rect)
-        screen.blit(l4, l4Rect)
-        screen.blit(l5, l5Rect)
-        choice = font6.render(certainty, True, WHITE, BLACK)
+        screen.blit(title, titleRect)
+        w_l_start(pts, alive, timer, list_start, list_w, list_l)
+        choice = font1.render(certainty, True, WHITE, BLACK)
         choiceRect = choice.get_rect()
         choiceRect.center = (500, 700)
         screen.blit(choice, choiceRect)
@@ -250,8 +268,15 @@ while running:
             if type(bump) == Obstacle:
                 bump.conveyor(0, 10)
         for xeno in road_kill:
+            xeno.conveyor(0, 10)
             if type(xeno) == Squishy:
-                xeno.conveyor(0, 10)
+                if xeno.rect.colliderect(you.rect):
+                    xeno.respawn()
+                    pts += 10
+            else:
+                xeno.hammerlock(you)
+                if xeno.rect.colliderect(you.rect):
+                    xeno.respawn()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
@@ -277,25 +302,18 @@ while running:
         if (current - start) >= 1:
             timer -= 1
             start = time.time()
-   
-    for xeno in road_kill:
-        if xeno.rect.colliderect(you.rect):
-            xeno.respawn()
-            pts += 10
     
     get_hit = pygame.sprite.spritecollide(you, road_rage, False)
     if get_hit:
         you.kill()
-        begin += 1
 
     if you not in road_obj:
         alive = False
-        w_l(pts, alive, timer, list_w, list_l)
-        timer = 61
+        w_l_start(pts, alive, timer, list_start, list_w, list_l)
 
     if timer <= 0:
         alive = False
-        w_l(pts, alive, timer, list_w, list_l)
+        w_l_start(pts, alive, timer, list_start, list_w, list_l)
 
 
     pygame.display.flip()
