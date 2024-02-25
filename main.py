@@ -206,10 +206,6 @@ def w_l(score, check, checknum, list1, list2):
             pointsnumRect.center = (500, 650)
             screen.blit(pointsnum, pointsnumRect)
 
-        
-
-
-
 running = True
 clock = pygame.time.Clock()
 while running:
