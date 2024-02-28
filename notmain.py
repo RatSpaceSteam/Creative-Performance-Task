@@ -103,7 +103,7 @@ class Bullet(pygame.sprite.Sprite):
     def hammerlock(self, target):
         px = target.rect.centerx
         py = target.rect.centery
-        distx = px - self.rect.centerx
+        distx = self.rect.centerx - px
         disty = self.rect.centery - py
         #disty *= -1
         self.deltax = distx
@@ -166,7 +166,7 @@ for num in range(5):
     choice += 1
 for num in range(3):
     road_kill.add(Squishy(BLUE))
-#road_kill.add(Bullet(WHITE))
+road_kill.add(Bullet(WHITE))
 road_obj.add(mid)
 road_obj.add(you)
 
@@ -274,16 +274,16 @@ while running:
                 if xeno.rect.colliderect(you.rect):
                     xeno.respawn()
                     pts += 10
-            #else:
-                #if target:
-                    #target = False
-                    #coords = you
-                #else:
-                    #target = True
-                    #coords = coords
-                #xeno.hammerlock(coords)
-                #if xeno.rect.colliderect(you.rect):
-                    #xeno.respawn()
+            else:
+                if target:
+                    target = False
+                    coords = you
+                else:
+                    target = True
+                    coords = coords
+                xeno.hammerlock(coords)
+                if xeno.rect.colliderect(you.rect):
+                    xeno.respawn()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
