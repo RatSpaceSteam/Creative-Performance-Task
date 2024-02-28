@@ -103,7 +103,7 @@ class Bullet(pygame.sprite.Sprite):
     def hammerlock(self, target):
         px = target.rect.centerx
         py = target.rect.centery
-        distx = self.rect.centerx - px
+        distx = px - self.rect.centerx
         disty = self.rect.centery - py
         #disty *= -1
         self.deltax = distx

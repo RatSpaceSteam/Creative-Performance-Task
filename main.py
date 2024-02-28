@@ -301,7 +301,7 @@ while running:
         wangmiaoRect.center = (500, 50)
 
         road_obj.draw(screen)
-        #road_rage.draw(screen)
+        road_rage.draw(screen)
         road_kill.draw(screen)
         screen.blit(wangmiao, wangmiaoRect)
 
@@ -310,9 +310,9 @@ while running:
             timer -= 1
             start = time.time()
     
-    #get_hit = pygame.sprite.spritecollide(you, road_rage, False)
-    #if get_hit:
-        #you.kill()
+    get_hit = pygame.sprite.spritecollide(you, road_rage, False)
+    if get_hit:
+        you.kill()
 
     if you not in road_obj:
         alive = False
