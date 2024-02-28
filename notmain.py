@@ -102,14 +102,9 @@ class Bullet(pygame.sprite.Sprite):
     
     def hammerlock(self, target):
         px = target.rect.centerx
-        py = target.rect.centery
         distx = px - self.rect.centerx
-        disty = self.rect.centery - py
-        #disty *= -1
         self.deltax = distx
-        self.deltay = disty
         self.rect.centerx += self.deltax
-        self.rect.centerx += self.deltay
     
     def respawn(self):
         self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
@@ -275,6 +270,8 @@ while running:
                     xeno.respawn()
                     pts += 10
             else:
+                #while xeno.rect.centery > 0 and xeno.rect.centery < 800 and xeno.rect.centerx > 100 and xeno.rect.centerx < 900:
+                    #xeno.hammerlock(coords)
                 if target:
                     target = False
                     coords = you
@@ -303,7 +300,7 @@ while running:
         road_obj.draw(screen)
         #road_rage.draw(screen)
         road_kill.draw(screen)
-        screen.blit(wangmiao, wangmiaoRect)
+        #screen.blit(wangmiao, wangmiaoRect)
 
         current = time.time()
         if (current - start) >= 1:
@@ -318,9 +315,9 @@ while running:
         alive = False
         w_l_start(pts, alive, timer, list_start, list_w, list_l)
 
-    if timer <= 0:
-        alive = False
-        w_l_start(pts, alive, timer, list_start, list_w, list_l)
+    #if timer <= 0:
+        #alive = False
+        #w_l_start(pts, alive, timer, list_start, list_w, list_l)
 
 
     pygame.display.flip()
