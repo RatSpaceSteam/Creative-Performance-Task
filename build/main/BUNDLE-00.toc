@@ -1,4 +1,0 @@
-([('main',
-   '/Users/debrapatt/Desktop/AP CS Princip '
-   'projects/Creative-Performance-Task/dist/main',
-   'EXECUTABLE')],)
