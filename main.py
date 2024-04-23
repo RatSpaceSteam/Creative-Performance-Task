@@ -1,6 +1,6 @@
 import pygame, sys, random, math, time
 start = time.time()
-timer = 61
+timer = 31
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -117,7 +117,7 @@ pygame.init()
 screen_width = 1000
 screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("One Minute to Sunrise")
+pygame.display.set_caption("Thirty Seconds to Sunrise")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
@@ -132,9 +132,9 @@ font1 = pygame.font.Font('freesansbold.ttf', 17)
 font2 = pygame.font.Font('freesansbold.ttf', 32)
 font3 = pygame.font.Font('freesansbold.ttf', 50)
 
-title = font2.render("One Minute to Sunrise", True, WHITE, BLACK)
+title = font2.render("Thirty Seconds to Sunrise", True, WHITE, BLACK)
 titleRect = title.get_rect()
-titleRect.center = (500, 100)
+titleRect.center = (500, 50)
 
 certainty = ""
 input_active = True
@@ -162,12 +162,13 @@ road_obj.add(you)
 
 alive = True
 list_start = ["Aliens have invaded Earth.", "All systems of nuclear missile defense have been disabled.", "Only trucks can deliver payloads towards their intended targets now.", "Your mission is to deliver a warhead to the largest ship in the invading fleet, which has recently made landfall.", "Are you brave enough to save humanity?"]
+controls = "Controls: W, A, S, D or UP, DOWN, LEFT, and RIGHT keys"
 list_w = ["CONGRATULATIONS", "THE ALIEN MENACE HAS BEEN STUNG WHERE IT COUNTS", "HUMANITY NOW HAS A FIGHTING CHANCE AT SURVIVAL", "POINTS:"]
 list_l = ["GAME OVER", "POINTS:"]
 
 def w_l_start(score, check, checknum, list1, list2, list3):
     if check:
-        pos_y = 100
+        pos_y = 50
         for text in list1:
             pos_y += 100
             lore = font1.render(text, True, WHITE, BLACK)
@@ -225,7 +226,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        ##credit to Rabbid76 on stackoverflow for how to make pygame inputs while the code is running##
+        ##Credit to Rabbid76 on stackoverflow for how to make pygame inputs while the code is running##
         elif event.type == pygame.MOUSEBUTTONDOWN:
             input_active = True
             certainty = ""
@@ -244,10 +245,15 @@ while running:
         w_l_start(pts, alive, timer, list_start, list_w, list_l)
         choice = font1.render(certainty, True, WHITE, BLACK)
         choiceRect = choice.get_rect()
-        choiceRect.center = (500, 700)
+        choiceRect.center = (500, 650)
         screen.blit(choice, choiceRect)
+        cont = font1.render(controls, True, WHITE, BLACK)
+        contRect = cont.get_rect()
+        contRect.center = (500, 750)
+        screen.blit(cont, contRect)
         if (certainty == "Yes" or certainty == "yes") and input_active == False:
             begin += 1
+            #Typing yes triggers game start
         if (certainty == "No" or certainty == "no") and input_active == False:
             break
         
@@ -297,10 +303,12 @@ while running:
     if you not in road_obj:
         alive = False
         w_l_start(pts, alive, timer, list_start, list_w, list_l)
+        #To trigger this event, die
 
     if timer <= 0:
         alive = False
         w_l_start(pts, alive, timer, list_start, list_w, list_l)
+        #To trigger this event, win
 
 
     pygame.display.flip()
