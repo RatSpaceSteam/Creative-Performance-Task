@@ -5,6 +5,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         self.image = pygame.image.load("delivery.png")
+        #Truck image taken from https://stock.adobe.com/search?k=truck+icon+top+view&asset_id=312286860
+        #Warhead image taken from https://www.freepik.com/premium-vector/atomic-bomb-pixel-art-character-vector-illustration_31158962.htm
         self.rect = self.image.get_rect(center = (500, 400))
 
     def move(self, deltax, deltay):
@@ -55,8 +57,10 @@ class Obstacle(pygame.sprite.Sprite):
         super(Obstacle, self).__init__()
         if choice % 1 == 0:
                 self.image = pygame.image.load("obstacles/hedgehog.png")
+                #Czech hedgehog image taken from https://www.vectorstock.com/royalty-free-vector/anti-tank-barricade-czech-hedgehog-vector-43070543
         if choice % 2 == 0:
                 self.image = pygame.image.load("obstacles/boulder.png")
+                #Boulder image from https://www.nicepng.com/downpng/u2t4i1a9u2i1i1e6_stone-sticker-rock-boulder/
         self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
         while self.rect.centerx > 400 and self.rect.centerx < 600:
             self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
@@ -87,25 +91,12 @@ class Squishy(pygame.sprite.Sprite):
     
     def respawn(self):
         self.rect = self.image.get_rect(center = (random.randint(100, 900), (random.randint(-100, 25))))
-
-class Bullet(pygame.sprite.Sprite):
-    def __init__(self, color):
-        super(Bullet, self).__init__()
-        self.radius = 10
-        self.speed = 10
-        self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA, 32)
-        self.image = self.image.convert_alpha()
-        pygame.draw.circle(self.image, color, (self.radius, self.radius), self.radius)
-        self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
-        while self.rect.centerx > 400 and self.rect.centerx < 600:
-            self.rect = self.image.get_rect(center = (random.randint(100, 900), random.randint(0, 800)))
     
     def hammerlock(self, target):
         px = target.rect.centerx
         py = target.rect.centery
         distx = px - self.rect.centerx
         disty = self.rect.centery - py
-        #disty *= -1
         self.deltax = distx
         self.deltay = disty
         self.rect.centerx += self.deltax
@@ -166,7 +157,6 @@ for num in range(5):
     choice += 1
 for num in range(3):
     road_kill.add(Squishy(BLUE))
-#road_kill.add(Bullet(WHITE))
 road_obj.add(mid)
 road_obj.add(you)
 
@@ -274,16 +264,6 @@ while running:
                 if xeno.rect.colliderect(you.rect):
                     xeno.respawn()
                     pts += 10
-            #else:
-                #if target:
-                    #target = False
-                    #coords = you
-                #else:
-                    #target = True
-                    #coords = coords
-                #xeno.hammerlock(coords)
-                #if xeno.rect.colliderect(you.rect):
-                    #xeno.respawn()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] or keys[pygame.K_w]:
